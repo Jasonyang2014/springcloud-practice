@@ -1,0 +1,21 @@
+server:
+  port: 8081
+eureka:
+  client:
+    service-url:
+      defaultZone: http://138.2.232.144:8888/eureka/
+spring:
+  application:
+    name: biz-consumer
+#  cloud:
+#    circuit:
+#      breaker:
+#        enabled: true
+feign:
+#  hystrix:
+#    enabled: true
+#  sentinel:
+#    enabled: true
+#  org.springframework.cloud.openfeign.FeignClientsConfiguration 配置
+  circuitbreaker:
+    enabled: true

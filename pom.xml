@@ -17,6 +17,8 @@
     <packaging>pom</packaging>
     <modules>
         <module>eureka-server</module>
+        <module>business-provider</module>
+        <module>business-consumer</module>
     </modules>
 
     <repositories>
@@ -33,7 +35,7 @@
         <repository>
             <id>aliyun</id>
             <name>central repository</name>
-            <url>https://maven.aliyun.com/repository/public</url>
+            <url>https://maven.aliyun.com/repository/spring</url>
             <layout>default</layout>
             <releases>
                 <enabled>true</enabled>

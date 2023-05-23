@@ -1,0 +1,9 @@
+debug: true
+eureka:
+  client:
+    service-url:
+      defaultZone: http://138.2.232.144:8888/eureka/
+
+spring:
+  application:
+    name: biz-service
