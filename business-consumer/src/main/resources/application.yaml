@@ -4,6 +4,10 @@ eureka:
   client:
     service-url:
       defaultZone: http://138.2.232.144:8888/eureka/
+logging:
+  level:
+    root: debug
+    com.auyeung.api: debug
 spring:
   application:
     name: biz-consumer
@@ -19,3 +23,11 @@ feign:
 #  org.springframework.cloud.openfeign.FeignClientsConfiguration 配置
   circuitbreaker:
     enabled: true
+
+#hystrix:
+#  command:
+#    default:
+#      execution:
+#        isolation:
+#          thread:
+#            timeoutInMilliseconds: 5000
