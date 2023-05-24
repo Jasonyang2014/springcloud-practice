@@ -1,8 +1,7 @@
-debug: true
+#debug: true
 logging:
   level:
-    root: debug
-
+    root: info
 server:
   port: 8083
 spring:
@@ -18,7 +17,9 @@ spring:
           password: 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
           skipSslValidation: true
           default-label: main
-#          proxy:
-#            https:
-#              host: localhost
-#              port: 7890
+          search-paths:
+            - biz-service
+          proxy:
+            https:
+              host: localhost
+              port: 7890
