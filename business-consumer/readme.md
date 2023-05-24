@@ -13,3 +13,5 @@
 - SpringCloud 版本2021.0.7
 - spring-cloud-starter-netflix-hystrix  2.2.10.RELEASE
 - jdk 1.8.0_144
+
+如果在`@FeignClient`上配置了`fallback`,则`@HystrixCommand`上配置的`fallbackMethod`不生效。
