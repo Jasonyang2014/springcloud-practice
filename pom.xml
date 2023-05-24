@@ -19,6 +19,7 @@
         <module>eureka-server</module>
         <module>business-provider</module>
         <module>business-consumer</module>
+        <module>gateway-server</module>
     </modules>
 
     <repositories>
