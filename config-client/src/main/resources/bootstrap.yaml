@@ -1,0 +1,25 @@
+spring:
+  cloud:
+    rabbitmq:
+      username: guest
+      password: guest
+      host: localhost
+      port: 5672
+    bootstrap:
+      enabled: true
+    config:
+      uri: http://localhost:8083/
+      label: main
+      profile: mac
+#      discovery:
+#        enabled: true
+#        service-id: config-server
+  application:
+    name: config-client
+#    服务发现
+#eureka:
+#  client:
+#    service-url:
+#      defaultZone: http://138.2.232.144:8888/eureka/
+#  instance:
+#    prefer-ip-address: true

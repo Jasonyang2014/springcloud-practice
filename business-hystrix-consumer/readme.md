@@ -7,7 +7,8 @@
 配置参数在 `com.netflix.hystrix.contrib.javanica.conf.HystrixPropertiesManager` 
 可以找到，具体的说明可以参考[官方](https://github.com/Netflix/Hystrix/wiki/Configuration)
 
-`@EnableHystrix` 在主启动类开启后，`@HystrixCommand` 才能使用。 但是不能使用在 `Interface` 上。只能使用在实现类上
+`@EnableHystrix` 在主启动类开启后，`@HystrixCommand` 才能使用。 通过注解激活配置类 `org.springframework.cloud.netflix.hystrix.HystrixCircuitBreakerConfiguration`
+但是本版本不能使用在 `Interface` 上。只能使用在实现类上
 [issue](https://github.com/Netflix/Hystrix/issues/1458)
 
 - SpringCloud 版本2021.0.7

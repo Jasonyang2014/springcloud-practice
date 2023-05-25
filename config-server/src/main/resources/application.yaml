@@ -1,12 +1,17 @@
 #debug: true
 logging:
   level:
-    root: info
+    root: debug
 server:
   port: 8083
 spring:
   application:
     name: config-server
+  rabbitmq:
+    username: guest
+    password: guest
+    host: localhost
+    port: 5672
   cloud:
     config:
       server:
@@ -19,7 +24,22 @@ spring:
           default-label: main
           search-paths:
             - biz-service
-          proxy:
-            https:
-              host: localhost
-              port: 7890
+            - config-client
+#          proxy:
+#            https:
+#              host: localhost
+#              port: 7890
+# 服务发现
+#eureka:
+#  client:
+#    service-url:
+#      defaultZone: http://138.2.232.144:8888/eureka/
+#  instance:
+#    prefer-ip-address: true
+management:
+  endpoints:
+    web:
+      exposure:
+        include:
+          - busenv
+          - busrefresh
