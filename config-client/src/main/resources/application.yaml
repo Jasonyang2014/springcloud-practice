@@ -1,4 +1,6 @@
-debug: true
+logging:
+  level:
+    root: debug
 server:
   port: 8084
 spring:

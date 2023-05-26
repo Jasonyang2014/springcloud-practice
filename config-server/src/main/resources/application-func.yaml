@@ -1,0 +1,69 @@
+#debug: true
+logging:
+  level:
+    root: info
+server:
+  port: 8083
+spring:
+  application:
+    name: config-server
+  rabbitmq:
+    username: guest
+    password: guest
+    host: localhost
+    port: 5672
+  cloud:
+    stream:
+      function:
+        definition: input;output
+      # org.springframework.cloud.stream.config.BindingServiceProperties
+      bindings:
+        input-in-0:
+          destination: testMsg
+          group: msgA
+          binder: rabbit1
+        output-out-0:
+          destination: testMsg
+          group: msgA
+          binder: rabbit1
+      binders:
+        rabbit1:
+          type: rabbit
+          environment:
+            spring:
+              rabbitmq:
+                host: localhost
+                port: 5672
+                username: guest
+                password: guest
+    config:
+      server:
+        enabled: true
+        git:
+          uri: https://github.com/Jasonyang2014/config-repository.git
+          username: 305744830@qq.com
+          password: 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
+          skipSslValidation: true
+          default-label: main
+          search-paths:
+            - biz-service
+            - config-client
+#          proxy:
+#            https:
+#              host: localhost
+#              port: 7890
+# 服务发现
+#eureka:
+#  client:
+#    service-url:
+#      defaultZone: http://138.2.232.144:8888/eureka/
+#  instance:
+#    prefer-ip-address: true
+management:
+  endpoints:
+    web:
+      exposure:
+        include:
+          - busenv
+          - busrefresh
+          - bindings
