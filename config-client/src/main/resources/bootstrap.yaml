@@ -6,14 +6,16 @@ spring:
     host: localhost
     port: 5672
   cloud:
+    function:
+      definition: uppercase;outbound
     stream:
 # org.springframework.cloud.stream.config.BindingServiceProperties
       bindings:
-        uppercase-in-0:
+        uppercase-out-0:
           destination: testMsg
           group: msgA
           binder: rabbit
-        uppercase-out-0:
+        outbound-out-0:
           destination: testMsg
           group: msgA
           binder: rabbit
@@ -46,5 +48,12 @@ spring:
 #      defaultZone: http://138.2.232.144:8888/eureka/
 #  instance:
 #    prefer-ip-address: true
+management:
+  endpoint:
+    web:
+      exposure:
+        include:
+          - bindings
+
 
 
