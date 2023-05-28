@@ -1,4 +1,6 @@
-debug: true
+logging:
+  level:
+    root: debug
 eureka:
   client:
     service-url:
@@ -7,3 +9,9 @@ eureka:
 spring:
   application:
     name: biz-service
+  zipkin:
+    base-url: http://192.18.134.94:8848/
+    sender:
+      type: web
+    service:
+      name: ${spring.application.name}

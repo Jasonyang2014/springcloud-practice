@@ -11,6 +11,12 @@ logging:
 spring:
   application:
     name: biz-consumer
+  zipkin:
+    base-url: http://192.18.134.94:8848/
+    sender:
+      type: web
+    service:
+      name: ${spring.application.name}
 #  cloud:
 #    circuit:
 #      breaker:

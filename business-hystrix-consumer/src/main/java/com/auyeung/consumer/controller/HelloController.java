@@ -6,10 +6,12 @@ import com.netflix.hystrix.contrib.javanica.annotation.HystrixCommand;
 import com.netflix.hystrix.contrib.javanica.annotation.HystrixProperty;
 import com.netflix.hystrix.contrib.javanica.conf.HystrixPropertiesManager;
 import lombok.AllArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RestController;
 
+@Slf4j
 @AllArgsConstructor
 @RestController
 public class HelloController {
@@ -20,6 +22,7 @@ public class HelloController {
 
     @GetMapping("/hello/{param}")
     public String hello(@PathVariable String param) {
+        log.info("client hello {}", param);
         return firstApi.echo(param);
     }
 
