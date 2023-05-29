@@ -11,8 +11,8 @@ class GrpcClient{
                 this.grpcExecutor = createGrpcExecutor(serverInfo.getServerIp());
             }
             //rpc 端口在nacos的端口偏移
-            //com.alibaba.nacos.api.common.Constants#SDK_GRPC_PORT_DEFAULT_OFFSET
-            //com.alibaba.nacos.api.common.Constants#CLUSTER_GRPC_PORT_DEFAULT_OFFSET
+            //com.alibaba.nacos.api.common.Constants#SDK_GRPC_PORT_DEFAULT_OFFSET=1000
+            //com.alibaba.nacos.api.common.Constants#CLUSTER_GRPC_PORT_DEFAULT_OFFSET=1001
             int port = serverInfo.getServerPort() + rpcPortOffset();
             ManagedChannel managedChannel = createNewManagedChannel(serverInfo.getServerIp(), port);
             RequestGrpc.RequestFutureStub newChannelStubTemp = createNewChannelStub(managedChannel);
