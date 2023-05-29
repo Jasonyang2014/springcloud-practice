@@ -15,3 +15,4 @@
 - [Gateway](gateway-server/readme.md)
 - [Config Server](config-server/readme.md)
 - [Nacos Config Client](alibaba-config-client/readme.md)
+- [Alibaba Sentinel](alibaba-sentinel-provider/readme.md)
