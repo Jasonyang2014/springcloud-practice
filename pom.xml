@@ -23,6 +23,7 @@
         <module>config-server</module>
         <module>config-client</module>
         <module>alibaba-config-client</module>
+        <module>alibaba-sentinel-provider</module>
     </modules>
 
     <repositories>

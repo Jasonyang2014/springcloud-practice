@@ -1,0 +1,10 @@
+server:
+  port: 8002
+spring:
+  application:
+    name: alibaba-sentinel-service
+  cloud:
+    sentinel:
+      transport:
+        port: 8719
+        dashboard: localhost:8080
