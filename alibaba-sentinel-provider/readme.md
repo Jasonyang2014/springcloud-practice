@@ -35,5 +35,13 @@ Socket业务响应类 `com.alibaba.csp.sentinel.transport.command.http.HttpEvent
 
 ### `@SentinelResource`
 
-参数必须和原来的请求参数顺序一致，在再加上一个异常`Throwable`。
+[官方说明](https://sentinelguard.io/zh-cn/docs/annotation-support.html)
+
+- blockHandler 
+- fallback
+
+`blockHandler`参数必须和原来的请求参数顺序一致，再加上一个异常`BlockException`。
+
+`fallback`参数必须和原来的请求参数顺序一致，再加上一个异常`Throwable`。
+
 判断条件在 `com.alibaba.csp.sentinel.annotation.aspectj.AbstractSentinelAspectSupport#findMethod(boolean, Class, String, Class, Class[])`

@@ -21,8 +21,7 @@ public class TestController {
     @GetMapping("/test")
     @SentinelResource(value = "test",
             entryType = EntryType.IN,
-            blockHandlerClass = RequestBlockHandler.class, blockHandler = "tooQuick",
-            fallbackClass = RequestFallback.class, fallback = "fallback"
+            blockHandlerClass = RequestBlockHandler.class, blockHandler = "tooQuick"
     )
     public String test() {
         return "test";

@@ -1,5 +1,7 @@
 package com.auyeung.sentinel.handler;
 
+import com.alibaba.csp.sentinel.slots.block.BlockException;
+
 public class RequestBlockHandler {
 
     /**
@@ -9,8 +11,8 @@ public class RequestBlockHandler {
      * @param exception
      * @return
      */
-    public static String tooQuick(Throwable exception) {
-        return String.format("request is too fast! %s", exception.getLocalizedMessage());
+    public static String tooQuick(BlockException exception) {
+        return String.format("request is too fast! %s", exception.toString());
     }
 
 }
