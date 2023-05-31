@@ -5,9 +5,9 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 
 @SpringBootApplication
-public class sentinelSentinelApplication {
+public class SentinelSentinelApplication {
 
     public static void main(String[] args) {
-        SpringApplication.run(sentinelSentinelApplication.class);
+        SpringApplication.run(SentinelSentinelApplication.class);
     }
 }
