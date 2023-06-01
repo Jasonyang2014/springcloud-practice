@@ -106,3 +106,7 @@ class EurekaServerBootstrap {
     }
 }
 ```
+
+由于引入了eureka-client包，同时也会配置`EurekaClient`。自动会配置类
+`org.springframework.cloud.netflix.eureka.EurekaClientAutoConfiguration`。
+配置信息类`org.springframework.cloud.netflix.eureka.EurekaClientConfigBean`
