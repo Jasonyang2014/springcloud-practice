@@ -16,8 +16,17 @@ import org.springframework.web.bind.annotation.PathVariable;
 )
 public interface SecondApi {
 
-
+//    @HystrixCommand(fallbackMethod = "timeout", commandProperties = {
+//            @HystrixProperty(name = HystrixPropertiesManager.EXECUTION_TIMEOUT_ENABLED, value = "true"),
+//            @HystrixProperty(name = HystrixPropertiesManager.EXECUTION_ISOLATION_THREAD_TIMEOUT_IN_MILLISECONDS, value = "5000"),
+//            @HystrixProperty(name = HystrixPropertiesManager.REQUEST_LOG_ENABLED, value = "true")
+//    })
     @GetMapping("/sleep/{times}")
     String sleep(@PathVariable String times);
+
+
+    default String timeout(){
+        return "sleep timeout";
+    }
 
 }

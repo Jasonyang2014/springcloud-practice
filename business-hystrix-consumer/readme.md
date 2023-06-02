@@ -11,6 +11,31 @@
 但是本版本不能使用在 `Interface` 上。只能使用在实现类上
 [issue](https://github.com/Netflix/Hystrix/issues/1458)
 
+使用`jdk proxy`代理生成的方法，丢失了注解信息。
+
+```java
+class HystrixCommandAspect{
+
+    private enum HystrixPointcutType {
+        COMMAND,
+        COLLAPSER;
+
+        static HystrixPointcutType of(Method method) {
+            if (method.isAnnotationPresent(HystrixCommand.class)) {
+                return COMMAND;
+            } else if (method.isAnnotationPresent(HystrixCollapser.class)) {
+                return COLLAPSER;
+            } else {
+                //在此处获取注解失败
+                String methodInfo = getMethodInfo(method);
+                throw new IllegalStateException("'https://github.com/Netflix/Hystrix/issues/1458' - no valid annotation found for: \n" + methodInfo);
+            }
+        }
+    }
+}
+```
+
+
 - SpringCloud 版本2021.0.7
 - spring-cloud-starter-netflix-hystrix  2.2.10.RELEASE
 - jdk 1.8.0_144

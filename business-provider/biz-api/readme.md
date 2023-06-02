@@ -134,6 +134,7 @@ class FeignClientFactoryBean{
                 url = name;
             }
             url += cleanPath();
+            //负载均衡
             return (T) loadBalance(builder, context, new HardCodedTarget<>(type, name, url));
         }
         if (StringUtils.hasText(url) && !url.startsWith("http")) {

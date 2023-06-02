@@ -10,6 +10,7 @@ spring:
   application:
     name: biz-service
   zipkin:
+    enabled: false
     base-url: http://192.18.134.94:8848/
     sender:
       type: web
