@@ -1,6 +1,37 @@
 ###  gateway
 
 如果只配置 `eureka` ，其他不做任何配置，会自动启用 `org.springframework.cloud.gateway.discovery.GatewayDiscoveryClientAutoConfiguration`
+引入Gateway，会自动启用配置类
+
+- `org.springframework.cloud.gateway.config.GatewayClassPathWarningAutoConfiguration`
+- `org.springframework.cloud.gateway.config.GatewayAutoConfiguration`
+
+引入eureka client，会自动引入load balancer包。启动client及balancer的配置
+
+- `org.springframework.cloud.netflix.eureka.EurekaClientAutoConfiguration`
+- `org.springframework.cloud.loadbalancer.config.LoadBalancerAutoConfiguration`
+
+处理请求的关键类
+```java
+
+class GatewayAutoConfiguration{
+
+    //web filter 过滤器
+    @Bean
+    public FilteringWebHandler filteringWebHandler(List<GlobalFilter> globalFilters) {
+        return new FilteringWebHandler(globalFilters);
+    }
+
+    // 路由规则映射
+    @Bean
+    @ConditionalOnMissingBean
+    public RoutePredicateHandlerMapping routePredicateHandlerMapping(FilteringWebHandler webHandler,
+                                                                     RouteLocator routeLocator, GlobalCorsProperties globalCorsProperties, Environment environment) {
+        return new RoutePredicateHandlerMapping(webHandler, routeLocator, globalCorsProperties, environment);
+    }
+
+}
+```
 
 自行配置的时候，需要注意路径的匹配。
 原来我们请求路径为 `<gateway_domain>/<serviceId>/<third_uri>` 经过解析后需要将 `third_uri` 映射到对应的服务上即可。
