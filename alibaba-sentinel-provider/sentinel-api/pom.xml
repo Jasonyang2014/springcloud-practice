@@ -5,16 +5,11 @@
     <modelVersion>4.0.0</modelVersion>
     <parent>
         <groupId>org.example</groupId>
-        <artifactId>springcloud-practice</artifactId>
+        <artifactId>alibaba-sentinel-provider</artifactId>
         <version>1.0-SNAPSHOT</version>
     </parent>
 
-    <artifactId>alibaba-sentinel-provider</artifactId>
-    <packaging>pom</packaging>
-    <modules>
-        <module>sentinel-api</module>
-        <module>sentinel-web</module>
-    </modules>
+    <artifactId>sentinel-api</artifactId>
 
     <properties>
         <maven.compiler.source>8</maven.compiler.source>
@@ -22,5 +17,15 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
 
+    <dependencies>
+        <dependency>
+            <groupId>org.springframework.cloud</groupId>
+            <artifactId>spring-cloud-starter-openfeign</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.alibaba.cloud</groupId>
+            <artifactId>spring-cloud-starter-alibaba-sentinel</artifactId>
+        </dependency>
+    </dependencies>
 
 </project>

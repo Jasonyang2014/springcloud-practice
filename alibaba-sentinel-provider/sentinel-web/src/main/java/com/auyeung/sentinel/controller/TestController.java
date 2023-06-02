@@ -1,6 +1,5 @@
 package com.auyeung.sentinel.controller;
 
-import com.alibaba.csp.sentinel.EntryType;
 import com.alibaba.csp.sentinel.annotation.SentinelResource;
 import com.auyeung.sentinel.fallback.RequestFallback;
 import com.auyeung.sentinel.handler.RequestBlockHandler;
@@ -20,7 +19,6 @@ public class TestController {
 
     @GetMapping("/test")
     @SentinelResource(value = "test",
-            entryType = EntryType.IN,
             blockHandlerClass = RequestBlockHandler.class, blockHandler = "tooQuick"
     )
     public String test() {
@@ -30,7 +28,6 @@ public class TestController {
 
     @GetMapping("/err")
     @SentinelResource(value = "err",
-            entryType = EntryType.IN,
             fallbackClass = RequestFallback.class, fallback = "fallback"
     )
     public String error() {
