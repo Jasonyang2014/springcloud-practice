@@ -28,8 +28,9 @@ is_running() {
   get_pid
   if [ -n "$PID" ]; then
     RUNNING_FLAG=1
+    echo "$P_NAME is running. pid is $PID"
   else
-    echo "$P_NAME is running"
+    echo "$P_NAME starts run"
   fi
 }
 
