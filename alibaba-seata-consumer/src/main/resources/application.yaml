@@ -1,0 +1,8 @@
+logging:
+  level:
+    root: info
+server:
+  port: 8004
+spring:
+  profiles:
+    active: mac, seata
