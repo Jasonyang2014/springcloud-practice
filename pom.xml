@@ -24,6 +24,7 @@
         <module>config-client</module>
         <module>alibaba-config-client</module>
         <module>alibaba-sentinel-provider</module>
+        <module>alibaba-seata-consumer</module>
     </modules>
 
     <repositories>

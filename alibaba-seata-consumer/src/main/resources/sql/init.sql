@@ -1,0 +1,1 @@
+insert into t_user(`name`,`balance`) values('zhangsan',100),('lisi',50);
