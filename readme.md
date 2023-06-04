@@ -40,3 +40,4 @@ class AutoConfigurationImportSelector{
 - [Config Server](config-server/readme.md)
 - [Nacos Config Client](alibaba-config-client/readme.md)
 - [Alibaba Sentinel](alibaba-sentinel-provider/readme.md)
+- [Alibaba seata](alibaba-seata-consumer/readme.md)
