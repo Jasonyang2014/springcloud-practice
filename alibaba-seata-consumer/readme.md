@@ -3,7 +3,9 @@
 参考[官网](https://seata.io/zh-cn/docs/overview/what-is-seata.html)
 
 - 下载`seata-server`服务，本测试未使用集群
-- 修改配置，`server`端注册，数据存储模式
+- 修改配置，`server`端注册，数据存储模式。注意如果使用的是nacos作为注册中心，需要将配置添加到nacos，seata在启动包内有提供相关的脚本。
+具体地址在`script/config-center/nacos`下。配置信息在`script/config-center/config.txt`，具体可以根据不同的信息进行修改。
+**如果不在nacos配置相关信息，将导致客户端无法获取配置开启事务。**
 - 客户端引入`spring-cloud-starter-alibaba-seata`，本次使用`nacos`注册，引入`nacos-client`。
 - 客户端配置，具体参数参考官网
 - 启动`nacos`及`seata-server`，需要注意的是，如使用的`mysql`在8.0版本，有可能会报错连接不上。
@@ -227,3 +229,133 @@ class TransactionalTemplate{
     }
 }
 ```
+由于没有开启合并批量请求，使用的请求方法`io.seata.core.rpc.netty.AbstractNettyRemoting#sendSync`
+```java
+class AbstractNettyRemoting{
+
+    protected Object sendSync(Channel channel, RpcMessage rpcMessage, long timeoutMillis) throws TimeoutException {
+
+        MessageFuture messageFuture = new MessageFuture();
+        messageFuture.setRequestMessage(rpcMessage);
+        messageFuture.setTimeout(timeoutMillis);
+        futures.put(rpcMessage.getId(), messageFuture);
+
+        channelWritableCheck(channel, rpcMessage.getBody());
+
+        String remoteAddr = ChannelUtil.getAddressFromChannel(channel);
+        doBeforeRpcHooks(remoteAddr, rpcMessage);
+        //使用channel进行通讯，添加监听器处理失败结果
+        channel.writeAndFlush(rpcMessage).addListener((ChannelFutureListener) future -> {
+            if (!future.isSuccess()) {
+                //请求失败，移除futures内的异步请求对象
+                MessageFuture messageFuture1 = futures.remove(rpcMessage.getId());
+                if (messageFuture1 != null) {
+                    //设置失败结果
+                    messageFuture1.setResultMessage(future.cause());
+                }
+                destroyChannel(future.channel());
+            }
+        });
+
+        try {
+            //获取异步结果
+            Object result = messageFuture.get(timeoutMillis, TimeUnit.MILLISECONDS);
+            //扩展点，可以在请求结束后处理信息
+            doAfterRpcHooks(remoteAddr, rpcMessage, result);
+            return result;
+        } catch (Exception exx) {
+            LOGGER.error("wait response error:{},ip:{},request:{}", exx.getMessage(), channel.remoteAddress(),
+                    rpcMessage.getBody());
+            if (exx instanceof TimeoutException) {
+                throw (TimeoutException) exx;
+            } else {
+                throw new RuntimeException(exx);
+            }
+        }
+    }
+}
+```
+seata配置的加载十分有趣，通过`io.seata.config.ConfigurationFactory`工厂类，实现不同的配置实例化不同的类。此处以`nacos`为例。
+```java
+
+class ConfigurationFactory{
+    
+    //加载配置
+    private static void load() {
+        //seata.config.name
+        String seataConfigName = System.getProperty(SYSTEM_PROPERTY_SEATA_CONFIG_NAME);
+        if (seataConfigName == null) {
+            //SEATA_CONFIG_NAME
+            seataConfigName = System.getenv(ENV_SEATA_CONFIG_NAME);
+        }
+        if (seataConfigName == null) {
+            //registry
+            seataConfigName = REGISTRY_CONF_DEFAULT;
+        }
+        //seataEnv
+        String envValue = System.getProperty(ENV_PROPERTY_KEY);
+        if (envValue == null) {
+            //SEATA_ENV
+            envValue = System.getenv(ENV_SYSTEM_KEY);
+        }
+        //由于本次并未配置上述的信息
+        Configuration configuration = (envValue == null) ? new FileConfiguration(seataConfigName,
+                false) : new FileConfiguration(seataConfigName + "-" + envValue, false);
+        Configuration extConfiguration = null;
+        try {
+            extConfiguration = EnhancedServiceLoader.load(ExtConfigurationProvider.class).provide(configuration);
+            if (LOGGER.isInfoEnabled()) {
+                LOGGER.info("load Configuration from :{}", extConfiguration == null ?
+                        configuration.getClass().getSimpleName() : "Spring Configuration");
+            }
+        } catch (EnhancedServiceNotFoundException ignore) {
+
+        } catch (Exception e) {
+            LOGGER.error("failed to load extConfiguration:{}", e.getMessage(), e);
+        }
+        CURRENT_FILE_INSTANCE = extConfiguration == null ? configuration : extConfiguration;
+    }
+}
+
+
+class FileConfiguration{
+    
+    public FileConfiguration(String name, boolean allowDynamicRefresh) {
+        File file = getConfigFile(name);
+        if (file == null) {
+            targetFilePath = null;
+            //此处会根据提供的文件名获取配置，如果根据文件名还未能获取到文件
+            //则会默认初见一个io.seata.config.file.SimpleFileConfig
+            //并将所有的系统属性赋值给SimpleFileConfig
+            fileConfig = FileConfigFactory.load();
+            this.allowDynamicRefresh = false;
+        } else {
+            targetFilePath = file.getPath();
+            fileConfig = FileConfigFactory.load(file, name);
+            targetFileLastModified = new File(targetFilePath).lastModified();
+            this.allowDynamicRefresh = allowDynamicRefresh;
+            if (LOGGER.isDebugEnabled()) {
+                LOGGER.debug("The file name of the operation is {}", name);
+            }
+        }
+        this.name = name;
+        configOperateExecutor = new ThreadPoolExecutor(CORE_CONFIG_OPERATE_THREAD, MAX_CONFIG_OPERATE_THREAD,
+                Integer.MAX_VALUE, TimeUnit.MILLISECONDS, new LinkedBlockingQueue<>(),
+                new NamedThreadFactory("configOperate", MAX_CONFIG_OPERATE_THREAD));
+    }
+}
+
+class SimpleFileConfig{
+    
+    
+    public SimpleFileConfig() {
+        //配置工厂类加载
+        //ConfigFactory#loadDefaultConfig => ConfigFactory#load => ConfigFactory#defaultOverrides => ConfigFactory#systemProperties
+        //=> ConfigImpl#systemPropertiesAsConfig => ConfigImpl#getSystemProperties
+        fileConfig = ConfigFactory.load();
+    }
+}
+```
+
+seata框架内，大量使用`spi`技术，根据配置的不同动态加载服务类。
+`io.seata.common.loader.EnhancedServiceLoader`
