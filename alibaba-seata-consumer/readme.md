@@ -14,6 +14,11 @@
 根据`SpringBoot`的自动装配策略，我们可以从下面配置类作为入口，探究seata的工作流程。
 - `io.seata.spring.boot.autoconfigure.SeataAutoConfiguration` 实例化相关的配置类
 - `io.seata.spring.boot.autoconfigure.SeataCoreAutoConfiguration` 激活`io.seata.spring.boot.autoconfigure.properties`包内的配置类
+- `io.seata.spring.boot.autoconfigure.SeataHttpAutoConfiguration` 添加拦截器，绑定`TX_XID`事务id
+- `io.seata.spring.boot.autoconfigure.SeataDataSourceAutoConfiguration` 实例化 `io.seata.spring.annotation.datasource.SeataAutoDataSourceProxyCreator`对数据源进行代理。
+根据不同的分之模式，选择不同的代理类。`AT`使用`io.seata.rm.datasource.DataSourceProxy`。
+如果使用的是`XA`则选择`io.seata.rm.datasource.xa.DataSourceProxyXA`
+
 
 auto configuration主要配置了`io.seata.spring.annotation.GlobalTransactionScanner`，初始化客户端。并配置相关的类。
 在类进行实例后的时候，扫描是否存在被`@GlobalTransaction`标注的类及类方法。如果存在，则进行增强。设置拦截器
@@ -104,6 +109,8 @@ public class GlobalTransactionScanner extends AbstractAutoProxyCreator
 事务实际处理类
 - `io.seata.tm.api.DefaultGlobalTransaction` 全局事务
 - `io.seata.tm.DefaultTransactionManager` 事务管理器
+
+每次开启事务，均会向`seata-server`请求信息
 
 ```java
 public class DefaultTransactionManager implements TransactionManager {
@@ -276,6 +283,8 @@ class AbstractNettyRemoting{
 }
 ```
 seata配置的加载十分有趣，通过`io.seata.config.ConfigurationFactory`工厂类，实现不同的配置实例化不同的类。此处以`nacos`为例。
+`seata-config-core-1.5.2.jar!/registry.conf`
+
 ```java
 
 class ConfigurationFactory{
@@ -298,7 +307,8 @@ class ConfigurationFactory{
             //SEATA_ENV
             envValue = System.getenv(ENV_SYSTEM_KEY);
         }
-        //由于本次并未配置上述的信息
+        //由于本次并未配置上述的信息，会依次从项目路径 -> system -> classpath 查找是否存在该文件
+        //最终在 seata-config-core-1.5.2.jar!/registry.conf 找到文件
         Configuration configuration = (envValue == null) ? new FileConfiguration(seataConfigName,
                 false) : new FileConfiguration(seataConfigName + "-" + envValue, false);
         Configuration extConfiguration = null;
@@ -324,8 +334,7 @@ class FileConfiguration{
         File file = getConfigFile(name);
         if (file == null) {
             targetFilePath = null;
-            //此处会根据提供的文件名获取配置，如果根据文件名还未能获取到文件
-            //则会默认初见一个io.seata.config.file.SimpleFileConfig
+            //默认初见一个io.seata.config.file.SimpleFileConfig
             //并将所有的系统属性赋值给SimpleFileConfig
             fileConfig = FileConfigFactory.load();
             this.allowDynamicRefresh = false;
