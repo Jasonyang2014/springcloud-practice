@@ -368,3 +368,6 @@ class SimpleFileConfig{
 
 seata框架内，大量使用`spi`技术，根据配置的不同动态加载服务类。
 `io.seata.common.loader.EnhancedServiceLoader`
+
+- 如果使用`sentinel`服务熔断，会导致`seata`事务失效。需要在`rollback`里面手动处理回滚
+- 业务异常，如果使用全局异常处理，同样也会导致事务失效。需要手动处理事务回滚。

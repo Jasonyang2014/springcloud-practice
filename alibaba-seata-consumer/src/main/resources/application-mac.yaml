@@ -31,7 +31,9 @@ feign:
     config:
       default:
         logger-level: full
-  circuitbreaker:
+#  circuitbreaker:
+#    enabled: true
+  sentinel:
     enabled: true
 
 
