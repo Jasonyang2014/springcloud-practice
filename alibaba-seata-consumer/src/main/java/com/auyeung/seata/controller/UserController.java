@@ -29,4 +29,9 @@ public class UserController {
         return userService.transfer(sId, tId, balance);
     }
 
+    @GetMapping("/order/create/{userId}")
+    public Boolean createOrder(@PathVariable Integer userId){
+        return userService.createOrder(userId);
+    }
+
 }

@@ -1,3 +1,7 @@
+logging:
+  level:
+    com.auyeung.sentinel: debug
+
 spring:
   application:
     name: alibaba-seata-consumer
@@ -11,6 +15,9 @@ spring:
       schema-locations: classpath*:sql/ddl.sql
       data-locations: classpath*:sql/init.sql
       mode: always
+  cloud:
+    discovery:
+      server-addr: 127.0.0.1:8848
 #  cloud:
 #    alibaba:
 #      seata:
@@ -19,5 +26,12 @@ spring:
 mybatis-plus:
   mapper-locations: classpath*:/mapper/**/*.xml
 
+feign:
+  client:
+    config:
+      default:
+        logger-level: full
+  circuitbreaker:
+    enabled: true
 
 

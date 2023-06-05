@@ -22,4 +22,11 @@ public interface UserService {
      * @return
      */
     User getUser(Integer id);
+
+    /**
+     * 创建订单
+     * @param id 用户id
+     * @return
+     */
+    boolean createOrder(Integer id);
 }

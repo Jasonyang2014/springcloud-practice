@@ -201,3 +201,6 @@ class ReflectiveFeign{
 ```
 
 在`@FeignClient`注解的类，都会生成一个代理类。在实际调用的时候，会使用invocation handle方法增强。
+开启`OpenFeign`熔断，配置`feign.circuitbreaker.enabled=true`
+
+参考[官网](https://docs.spring.io/spring-cloud-openfeign/docs/3.1.7/reference/html/)
