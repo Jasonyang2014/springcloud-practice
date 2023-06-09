@@ -220,6 +220,7 @@ class TransactionalTemplate{
                     throw ex;
                 }
                 // 4. everything is fine, commit.
+                // 本地事务报告TC
                 commitTransaction(tx, txInfo);
                 return rs;
             } finally {
@@ -380,6 +381,7 @@ seata框架内，大量使用`spi`技术，根据配置的不同动态加载服�
 
 - 初始化客户端`TMClient、RMClient`
 - 注册到`seata-server`
+- 调用`@GlobalTransaction、@GlobalLock`方法，进入拦截器`GlobalTransactionalInterceptor`。向`TC`注册事务。
 - 根据不同的事务场景，使用不同的提交策略。
   - 本地事务，不涉及到`undo_log`的写入
   - 全局事务，本地提交前，写入`undo_log`。客户端请求注册分支，由`ClientHandler`对返回数据进行识别处理。
@@ -399,3 +401,4 @@ seata框架内，大量使用`spi`技术，根据配置的不同动态加载服�
     } 
   }
   ```
+- 本地事务提交成功，向`TC`报告本地事务。一阶段提交完成。
