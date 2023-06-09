@@ -220,7 +220,7 @@ class TransactionalTemplate{
                     throw ex;
                 }
                 // 4. everything is fine, commit.
-                // 本地事务报告TC
+                // 全局事务报告TC
                 commitTransaction(tx, txInfo);
                 return rs;
             } finally {
@@ -402,3 +402,4 @@ seata框架内，大量使用`spi`技术，根据配置的不同动态加载服�
   }
   ```
 - 本地事务提交成功，向`TC`报告本地事务。一阶段提交完成。本地事务成功，报告默认关闭`IS_REPORT_SUCCESS_ENABLE=false`
+- 如果调用链正常，全局事务报告成功`TransactionalTemplate#execute => commitTransaction(tx, txInfo);`
