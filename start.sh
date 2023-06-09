@@ -67,7 +67,7 @@ stop_seata() {
   if [ -n "$PID" ]; then
     echo "stop $P_NAME."
     kill $PID
-    echo "send signal to $PID ok."
+    echo "send signal to $P_NAME($PID) ok."
   else
     echo "$P_NAME is already stopped."
   fi
@@ -79,7 +79,7 @@ stop_sentinel() {
   if [ -n "$PID" ]; then
     echo "stop $P_NAME."
     kill $PID
-    echo "send signal to $PID ok."
+    echo "send signal to $P_NAME($PID) ok."
   else
     echo "$P_NAME is already stopped."
   fi

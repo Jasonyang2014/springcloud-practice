@@ -21,17 +21,18 @@
 
 
 auto configuration主要配置了`io.seata.spring.annotation.GlobalTransactionScanner`，初始化客户端。并配置相关的类。
-在类进行实例后的时候，扫描是否存在被`@GlobalTransaction`标注的类及类方法。如果存在，则进行增强。设置拦截器
+在类进行实例后的时候，扫描是否存在被`@GlobalTransaction`标注的类及类方法和`@GlobalLock`标注的方法。如果存在，则进行增强。设置拦截器
 `io.seata.spring.annotation.GlobalTransactionalInterceptor`。对事务的处理，主要依靠该拦截器进行处理。
 
 ```java
-public class GlobalTransactionScanner extends AbstractAutoProxyCreator
+ public class GlobalTransactionScanner extends AbstractAutoProxyCreator
         implements ConfigurationChangeListener, InitializingBean, ApplicationContextAware, DisposableBean {
 
     //初始化客户端
     // TMCClient -> TmNettyRemotingClient -> AbstractNettyRemotingClient
     // 注册response processor hearBeat processor， 初始化channelManager
-    //
+    // 客户端添加channel处理器ClientHandler，对请求消息进行处理。
+    // 在注册branchId成功后，会触发undo_log的删除
     private void initClient() {
         //init TM
         TMClient.init(applicationId, txServiceGroup, accessKey, secretKey);
@@ -62,7 +63,7 @@ public class GlobalTransactionScanner extends AbstractAutoProxyCreator
                     //TCC interceptor, proxy bean of sofa:reference/dubbo:reference, and LocalTCC
                     interceptor = new TccActionInterceptor(TCCBeanParserUtils.getRemotingDesc(beanName));
                     ConfigurationCache.addConfigListener(ConfigurationKeys.DISABLE_GLOBAL_TRANSACTION,
-                            (ConfigurationChangeListener)interceptor);
+                            (ConfigurationChangeListener) interceptor);
                 } else {
                     Class<?> serviceInterface = SpringProxyUtils.findTargetClass(bean);
                     Class<?>[] interfacesIfJdk = SpringProxyUtils.findInterfaces(bean);
@@ -76,7 +77,7 @@ public class GlobalTransactionScanner extends AbstractAutoProxyCreator
                         globalTransactionalInterceptor = new GlobalTransactionalInterceptor(failureHandlerHook);
                         ConfigurationCache.addConfigListener(
                                 ConfigurationKeys.DISABLE_GLOBAL_TRANSACTION,
-                                (ConfigurationChangeListener)globalTransactionalInterceptor);
+                                (ConfigurationChangeListener) globalTransactionalInterceptor);
                     }
                     interceptor = globalTransactionalInterceptor;
                 }
@@ -236,6 +237,7 @@ class TransactionalTemplate{
     }
 }
 ```
+
 由于没有开启合并批量请求，使用的请求方法`io.seata.core.rpc.netty.AbstractNettyRemoting#sendSync`
 ```java
 class AbstractNettyRemoting{
@@ -371,3 +373,29 @@ seata框架内，大量使用`spi`技术，根据配置的不同动态加载服�
 
 - 如果使用`sentinel`服务熔断，会导致`seata`事务失效。需要在`rollback`里面手动处理回滚
 - 业务异常，如果使用全局异常处理，同样也会导致事务失效。需要手动处理事务回滚。
+
+**AT**模式小结：`seata`在启动时，会启动两个客户端`TMClient、RMClient`。分别添加一个`channel`处理器`ClientHandler`，对请求的数据进行处理。
+在数据提交的时候，对事务进行判断，如果有全局事务，则进行相关的判断后注册分支，再提交本地事务。如果使用的是全局锁，则会在提交前进行锁的校验后进行本地事务提交。
+在提交分支后，会由`ClientHandler`对消息内容识别，进行相应的`processor`处理。如删除`undo_log`数据。
+
+- 初始化客户端`TMClient、RMClient`
+- 注册到`seata-server`
+- 根据不同的事务场景，使用不同的提交策略。
+  - 本地事务，不涉及到`undo_log`的写入
+  - 全局事务，本地提交前，写入`undo_log`。客户端请求注册分支，由`ClientHandler`对返回数据进行识别处理。
+  - 全局锁，对锁进行校验再提交。并不保存`undo_log`
+  ```java
+  class ConnectionProxy{
+    
+    //数据提交
+    private void doCommit() throws SQLException {
+        if (context.inGlobalTransaction()) {
+            processGlobalTransactionCommit();
+        } else if (context.isGlobalLockRequire()) {
+            processLocalCommitWithGlobalLocks();
+        } else {
+            targetConnection.commit();
+        }
+    } 
+  }
+  ```
