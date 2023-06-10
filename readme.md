@@ -38,6 +38,6 @@ class AutoConfigurationImportSelector{
 - [Hystrix](business-hystrix-consumer/readme.md)
 - [Gateway](gateway-server/readme.md)
 - [Config Server](config-server/readme.md)
-- [Nacos Config Client](alibaba-config-client/readme.md)
+- [Nacos Config Client](alibaba-nacos-config-client/readme.md)
 - [Alibaba Sentinel](alibaba-sentinel-provider/readme.md)
 - [Alibaba seata](alibaba-seata-consumer/readme.md)
