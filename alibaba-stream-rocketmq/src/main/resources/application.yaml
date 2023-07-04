@@ -1,3 +1,11 @@
 server:
   port: 8006
 debug: true
+logging:
+  level:
+    org.springframework.context.support: debug
+spring:
+  profiles:
+    active: rocketmq
+  application:
+    name: alibaba-stream-rocketmq
