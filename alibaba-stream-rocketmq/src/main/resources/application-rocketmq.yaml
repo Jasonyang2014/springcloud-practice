@@ -7,8 +7,16 @@ spring:
           destination: broadcast
         rocketmq-out-0:
           destination: broadcast
+        delayConsume-in-0:
+          destination: delay-order
+        delay-out-0:
+          destination: delay-order
+        tx-out-0:
+          destination: tx-order
+        txConsumer-in-0:
+          destination: tx-order
       function:
-        definition: consumeMsg
+        definition: consumeMsg;delayConsume;txConsumer
       rocketmq:
         binder:
           name-server: 127.0.0.1:9876
@@ -22,6 +30,10 @@ spring:
               orderly: false
               delayLevelWhenNextConsume: 0
               suspendCurrentQueueTimeMillis: 1000
+          delayConsume-in-0:
+            consumer:
+              enable: true
+              broadcasting: false
           rocketmq-out-0:
             producer:
               enable: true
@@ -34,3 +46,15 @@ spring:
               retryTimesWhenSendFailed: 2
               retryTimesWhenSendAsyncFailed: 2
               retryNextServer: false
+          delay-out-0:
+            producer:
+              enable: true
+              sync: false
+              transactional: false
+          tx-out-0:
+            producer:
+              enable: true
+              sync: false
+              transactional: true
+              transactionListener: transactionalMsgListener
+              producerType: Trans
