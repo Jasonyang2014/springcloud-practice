@@ -1,5 +1,7 @@
 ###  gateway
 
+[官网](https://spring.io/projects/spring-cloud-gateway#learn)说明
+
 如果只配置 `eureka` ，其他不做任何配置，会自动启用 `org.springframework.cloud.gateway.discovery.GatewayDiscoveryClientAutoConfiguration`
 引入Gateway，会自动启用配置类
 
