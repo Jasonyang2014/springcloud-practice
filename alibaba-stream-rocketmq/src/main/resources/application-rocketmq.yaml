@@ -19,7 +19,7 @@ spring:
         definition: consumeMsg;delayConsume;txConsumer
       rocketmq:
         binder:
-          name-server: 127.0.0.1:9876
+          name-server: 172.20.115.2:9876
           enable-msg-trace: true
           customized-trace-topic: RMQ_SYS_TRACE_TOPIC
         bindings:

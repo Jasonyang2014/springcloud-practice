@@ -26,9 +26,22 @@
         <module>alibaba-sentinel-provider</module>
         <module>alibaba-seata-consumer</module>
         <module>alibaba-stream-rocketmq</module>
+        <module>dubbo-service</module>
+<!--        <module>dubbo-service/dubbo-service-api</module>-->
+<!--        <module>dubbo-service/dubbo-service-provider</module>-->
+<!--        <module>dubbo-service/dubbo-service-consumer</module>-->
     </modules>
 
     <repositories>
+<!--        <repository>-->
+<!--            <id>aliyun</id>-->
+<!--            <name>aliyun repository</name>-->
+<!--            <url>https://maven.aliyun.com/repository/public</url>-->
+<!--            <layout>default</layout>-->
+<!--            <snapshots>-->
+<!--                <enabled>false</enabled>-->
+<!--            </snapshots>-->
+<!--        </repository>-->
         <repository>
             <id>central</id>
             <name>central repository</name>
@@ -38,6 +51,7 @@
                 <enabled>false</enabled>
             </snapshots>
         </repository>
+
     </repositories>
     <properties>
         <maven.compiler.source>8</maven.compiler.source>
@@ -45,6 +59,7 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <spring-cloud.version>2021.0.7</spring-cloud.version>
         <lombok.version>1.18.24</lombok.version>
+        <dubbo.version>3.2.11</dubbo.version>
     </properties>
 
     <dependencies>

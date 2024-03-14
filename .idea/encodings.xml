@@ -15,6 +15,12 @@
     <file url="file://$PROJECT_DIR$/business-provider/src/main/resources" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/config-client/src/main/java" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/config-server/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/dubbo-service-provider/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/dubbo-service/dubbo-service-api/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/dubbo-service/dubbo-service-consumer/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/dubbo-service/dubbo-service-provider/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/dubbo-service/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/dubbo-service/src/main/resources" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/eureka-server/src/main/java" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/eureka-server/src/main/resources" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/gateway-server/src/main/java" charset="UTF-8" />

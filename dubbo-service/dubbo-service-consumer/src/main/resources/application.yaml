@@ -1,0 +1,15 @@
+debug: true
+server:
+  port: 8004
+dubbo:
+  protocol:
+    name: dubbo
+    port: 28890
+  application:
+    name: dubbo-service-consumer
+    qos-port: 22223
+    register-mode: all
+  registry:
+    address: nacos://localhost:8848
+    parameters:
+      register-consumer-url: true
