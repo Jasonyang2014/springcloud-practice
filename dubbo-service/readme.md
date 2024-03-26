@@ -8,7 +8,7 @@
 `org.apache.dubbo.config.spring.beans.factory.annotation.ReferenceAnnotationBeanPostProcessor.processReferenceAnnotatedBeanDefinition`对`@DubboReference`注解进行处理
 
 ```java
-private static void initContext(
+    private static void initContext(
             DubboSpringInitContext context,
             BeanDefinitionRegistry registry,
             ConfigurableListableBeanFactory beanFactory) {
@@ -96,6 +96,85 @@ private static void initContext(
         // register infra bean if not exists later
         registerInfrastructureBean(
                 registry, DubboInfraBeanRegisterPostProcessor.BEAN_NAME, DubboInfraBeanRegisterPostProcessor.class);
+    }
+```
+`org.apache.dubbo.rpc.model.FrameworkModel` 初始化获取loader,加载initializer初始化initializeFrameworkModel
+```java
+    //org.apache.dubbo.rpc.model.FrameworkModel
+    public FrameworkModel() {
+        super(null, ExtensionScope.FRAMEWORK, false);
+        synchronized (globalLock) {
+            synchronized (instLock) {
+                this.setInternalId(String.valueOf(index.getAndIncrement()));
+                // register FrameworkModel instance early
+                allInstances.add(this);
+                if (LOGGER.isInfoEnabled()) {
+                    LOGGER.info(getDesc() + " is created");
+                }
+                initialize();
+    
+                TypeDefinitionBuilder.initBuilders(this);
+    
+                serviceRepository = new FrameworkServiceRepository(this);
+                //加载扩展loader
+                ExtensionLoader<ScopeModelInitializer> initializerExtensionLoader =
+                        this.getExtensionLoader(ScopeModelInitializer.class);
+                Set<ScopeModelInitializer> initializers = initializerExtensionLoader.getSupportedExtensionInstances();
+                for (ScopeModelInitializer initializer : initializers) {
+                    initializer.initializeFrameworkModel(this);
+                }
+    
+                internalApplicationModel = new ApplicationModel(this, true);
+                internalApplicationModel
+                        .getApplicationConfigManager()
+                        .setApplication(new ApplicationConfig(
+                                internalApplicationModel, CommonConstants.DUBBO_INTERNAL_APPLICATION));
+                internalApplicationModel.setModelName(CommonConstants.DUBBO_INTERNAL_APPLICATION);
+            }
+        }
+    }
+
+    public <T> ExtensionLoader<T> getExtensionLoader(Class<T> type) {
+        checkDestroyed();
+        if (type == null) {
+            throw new IllegalArgumentException("Extension type == null");
+        }
+        if (!type.isInterface()) {
+            throw new IllegalArgumentException("Extension type (" + type + ") is not an interface!");
+        }
+        if (!withExtensionAnnotation(type)) {
+            throw new IllegalArgumentException("Extension type (" + type
+                    + ") is not an extension, because it is NOT annotated with @" + SPI.class.getSimpleName() + "!");
+        }
+    
+        // 1. find in local cache
+        ExtensionLoader<T> loader = (ExtensionLoader<T>) extensionLoadersMap.get(type);
+    
+        ExtensionScope scope = extensionScopeMap.get(type);
+        if (scope == null) {
+            SPI annotation = type.getAnnotation(SPI.class);
+            scope = annotation.scope();
+            extensionScopeMap.put(type, scope);
+        }
+    
+        if (loader == null && scope == ExtensionScope.SELF) {
+            // create an instance in self scope
+            loader = createExtensionLoader0(type);
+        }
+    
+        // 2. find in parent
+        if (loader == null) {
+            if (this.parent != null) {
+                loader = this.parent.getExtensionLoader(type);
+            }
+        }
+    
+        // 3. create it
+        if (loader == null) {
+            loader = createExtensionLoader(type);
+        }
+    
+        return loader;
     }
 ```
 
