@@ -8,10 +8,10 @@ import org.springframework.cloud.openfeign.EnableFeignClients;
 @EnableDiscoveryClient
 @EnableFeignClients(basePackages = "com.auyeung.sentinel")
 @SpringBootApplication(scanBasePackages = {"com.auyeung.seata", "com.auyeung.sentinel"})
-public class ConsumerApplication {
+public class SeataConsumerApplication {
 
     public static void main(String[] args) {
-        SpringApplication.run(ConsumerApplication.class);
+        SpringApplication.run(SeataConsumerApplication.class);
     }
 
 }

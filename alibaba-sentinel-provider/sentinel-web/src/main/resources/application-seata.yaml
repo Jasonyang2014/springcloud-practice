@@ -1,0 +1,30 @@
+# io.seata.spring.boot.autoconfigure.properties.SeataProperties 配置类
+# io.seata.spring.boot.autoconfigure.properties.client.ServiceProperties
+# io.seata.spring.boot.autoconfigure.properties.registry.RegistryProperties
+# io.seata.spring.boot.autoconfigure.properties.registry.RegistryNacosProperties
+seata:
+  applicationId: ${spring.application.name}
+#  txServiceGroup: SEATA_GROUP
+  dataSourceProxyMode: AT
+  registry:
+    type: nacos
+    nacos:
+      application: seata-server
+      server-addr: 127.0.0.1:8848
+      group: "SEATA_GROUP"
+      namespace: ""
+      username: "nacos"
+      password: "nacos"
+  config:
+    type: nacos
+    nacos:
+      server-addr: 127.0.0.1:8848
+      group: "SEATA_GROUP"
+      namespace: ""
+      username: "nacos"
+      password: "nacos"
+      data-id: seataServer.properties
+  tx-service-group: default_tx_group
+  service:
+    vgroup-mapping:
+      default_tx_group: default

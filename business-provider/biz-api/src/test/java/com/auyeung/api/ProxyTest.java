@@ -20,16 +20,18 @@ public class ProxyTest {
                     String name = method.getName();
                     int length = args == null ? 0 : args.length;
                     Anno annotation = method.getAnnotation(Anno.class);
-                    String format = String.format("method %s args %d annotation %s", name, length, annotation.annotationType().getName());
+                    String value = annotation.value();
+                    String format = String.format("method %s args %d annotation %s value %s", name, length, annotation.annotationType().getName(), value);
                     System.out.println(format);
                     return format;
                 }
         );
 
         try {
+            //代理类无法获取接口方法上的信息
             Method method = api.getClass().getMethod("hello");
             Anno annotation = method.getAnnotation(Anno.class);
-            System.out.println(annotation);
+            System.out.printf("get method annotation value %s\n", annotation);
 
         } catch (NoSuchMethodException e) {
             throw new RuntimeException(e);
@@ -50,5 +52,7 @@ interface Api {
 @Retention(RetentionPolicy.RUNTIME)
 @Target({ElementType.METHOD})
 @interface Anno {
+
+    String value() default "default value";
 
 }

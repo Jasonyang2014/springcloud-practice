@@ -7,9 +7,9 @@ import org.springframework.cloud.client.discovery.EnableDiscoveryClient;
 
 @EnableDiscoveryClient
 @SpringBootApplication
-public class SentinelSentinelApplication {
+public class SentinelApplication {
 
     public static void main(String[] args) {
-        SpringApplication.run(SentinelSentinelApplication.class);
+        SpringApplication.run(SentinelApplication.class);
     }
 }
