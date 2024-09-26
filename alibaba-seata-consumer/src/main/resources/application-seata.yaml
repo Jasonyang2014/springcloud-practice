@@ -10,7 +10,7 @@ seata:
     type: nacos
     nacos:
       application: seata-server
-      server-addr: 127.0.0.1:8848
+      serverAddr: 47.98.126.118:8848
       group: "SEATA_GROUP"
       namespace: ""
       username: "nacos"
@@ -18,9 +18,13 @@ seata:
   config:
     type: nacos
     nacos:
-      server-addr: 127.0.0.1:8848
+      serverAddr: 47.98.126.118:8848
       group: "SEATA_GROUP"
       namespace: ""
       username: "nacos"
       password: "nacos"
-
+      data-id: seataServer.properties
+  tx-service-group: default_tx_group
+  service:
+    vgroup-mapping:
+      default_tx_group: default

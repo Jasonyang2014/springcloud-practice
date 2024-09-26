@@ -4,6 +4,7 @@
     <file url="file://$PROJECT_DIR$/alibaba-nacos-config-client/src/main/java" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/alibaba-seata-consumer/src/main/java" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/alibaba-sentinel-provider/sentinel-api/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/alibaba-sentinel-provider/sentinel-api/src/main/resources" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/alibaba-sentinel-provider/sentinel-web/src/main/java" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/alibaba-sentinel-provider/src/main/java" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/alibaba-sentinel-provider/src/main/resources" charset="UTF-8" />

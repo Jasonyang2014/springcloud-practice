@@ -177,6 +177,10 @@
         return loader;
     }
 ```
+服务之间的调用使用代理模式，根据使用的协议不同，构造不同的代理对象。构造客户端对象，核心方法在`org.apache.dubbo.rpc.protocol.dubbo.DubboProtocol#initClient`
+关键的调用过程通过**Invocation**实现 `org.apache.dubbo.rpc.protocol.dubbo.DubboInvoker#doInvoke`。底层通信依靠Netty来处理,
+核心类 `org.apache.dubbo.remoting.exchange.support.header.HeaderExchangeHandler`
+
 
 dubbo 配置相关参数可以在类 `org.apache.dubbo.config.spring.context.annotation.DubboConfigConfiguration` 中查看
 
