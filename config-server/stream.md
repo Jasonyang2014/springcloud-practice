@@ -1,6 +1,6 @@
 ### spring cloud stream 
 
-引入包，进行配置。现在分我两种类型。
+引入包，进行配置。分两种类型。
 - 使用老的配置手动绑定 `@EnableBinding @Input @Output @StreamListener`
 - 另一种使用`Function`配置
 

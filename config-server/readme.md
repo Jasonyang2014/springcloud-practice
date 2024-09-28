@@ -1,6 +1,6 @@
 ### config server
 
-如果https访问协议异常，可以尝试更换httpclient版本。设置协议版本号。
+如果https访问协议异常，可以尝试更换http-client版本。设置协议版本号。
 
 ```shell
 # 查看服务器的ssl协议
